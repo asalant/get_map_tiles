@@ -7,7 +7,20 @@ class GetMapTilesTest < Minitest::Test
     refute_nil ::GetMapTiles::VERSION
   end
 
-  def test_it_does_something_useful
-    assert false
+  def test_it_converts_lat_lon_to_x_y_for_zoom_14
+    fetcher = ::GetMapTiles::Fetcher.new
+    tile_num = fetcher.get_tile_number(39.36786, -120.36380, 14) # Just east of Peter Grubb Hut
+    assert_equal(2714, tile_num[:x])
+    assert_equal(6240, tile_num[:y])
+    assert_equal(14, tile_num[:z])
+  end
+
+  def test_it_converts_lat_lon_to_x_y_for_zoom_15
+    fetcher = ::GetMapTiles::Fetcher.new
+    tile_num = fetcher.get_tile_number(39.36786, -120.36380, 15) # Just east of Peter Grubb Hut
+    assert_equal(5428, tile_num[:x])
+    assert_equal(12480, tile_num[:y])
+    assert_equal(15, tile_num[:z])
   end
 end
+
