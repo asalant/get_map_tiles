@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "fileutils"
+require "aws-sdk-s3"
 require "down"
 
 module GetMapTiles
@@ -11,6 +13,8 @@ module GetMapTiles
       @min_zoom = 6
       @max_zoom = 15
       @default_vars = vars
+      @s3_client = Aws::S3::Client.new # Configured from ENV
+      @s3_bucket = ENV['AWS_S3_BUCKET']
     end
 
     def get_tile_number(lat_deg, lng_deg, zoom)
@@ -51,14 +55,29 @@ module GetMapTiles
     def download(ne_corner, sw_corner)
       tiles = get_tiles_for_region(ne_corner, sw_corner)
       tiles.each do |tile|
-        dir  = sprintf "./tiles/%{zoom}/%{x}", tile
-        FileUtils.mkdir_p dir
-        file = sprintf "#{dir}/%{y}.png", tile
-        puts "Downloading #{file}"
-        Down.download(tile[:url], destination: file, max_size: 1 * 1024 * 1024) # 1 MB
+        fetch_tile(tile)
       end
     end
 
+    def fetch_tile(tile)
+      dir  = sprintf "./tiles/%{zoom}/%{x}", tile
+      FileUtils.mkdir_p dir
+      file = sprintf "#{dir}/%{y}.png", tile
+      print "#{file} downloading.. "
+      tempfile = Down.download(tile[:url], max_size: 1 * 1024 * 1024) # 1 MB
+      # FileUtils.mv(tempfile.path, file)
+      print "uploading.. "
+      upload_to_s3(tile, tempfile)
+      print "done.\n"
+    end
+
+    def upload_to_s3(tile, tempfile)
+      object_key  = sprintf "%{zoom}/%{x}/%{y}.png", tile
+      @s3_client.put_object(bucket: @s3_bucket,
+        key: object_key,
+        body: File.read(tempfile.path)
+      )
+    end
 
   end
 

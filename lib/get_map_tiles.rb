@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "dotenv"
+Dotenv.load
+
 require_relative "get_map_tiles/version"
 require_relative "get_map_tiles/fetcher"
 

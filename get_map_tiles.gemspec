@@ -29,6 +29,9 @@ Gem::Specification.new do |spec|
 
   # Register a new dependency of your gem
   spec.add_dependency "down", "~> 5.0"
+  spec.add_dependency "aws-sdk-s3", "~> 1"
+  spec.add_dependency "nokogiri"
+  spec.add_dependency "dotenv"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html
