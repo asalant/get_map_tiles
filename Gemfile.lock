@@ -2,11 +2,17 @@ PATH
   remote: .
   specs:
     get_map_tiles (0.1.0)
+      down (~> 5.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
+    down (5.4.0)
+      addressable (~> 2.8)
     minitest (5.17.0)
+    public_suffix (5.0.1)
     rake (13.0.6)
 
 PLATFORMS

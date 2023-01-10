@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "get_map_tiles"
+
+# You can add fixtures and/or initialization code here to make experimenting
+# with your gem easier. You can also use a different console, if you like.
+
+# (If you use this, don't forget to add pry to your Gemfile!)
+# require "pry"
+# Pry.start
+
+template = "https://heatmap-external-a.strava.com/tiles-auth/%{activity}/hot/%{z}/%{x}/%{y}.png?%{auth_params}"
+
+# Valid for two weeks from 1/8/2023
+auth_params = "Key-Pair-Id=APKAIDPUN4QMG7VUQPSA&Policy=eyJTdGF0ZW1lbnQiOiBbeyJSZXNvdXJjZSI6Imh0dHBzOi8vaGVhdG1hcC1leHRlcm5hbC0qLnN0cmF2YS5jb20vKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTY3MzkzMTg4OH0sIkRhdGVHcmVhdGVyVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNjcyNzA3ODg4fX19XX0_&Signature=NUjO01oEMjsMbyZYmyNZV4Px4jtb4k7N395ntSiK-HamKs5IuFRgLFxymTx-wt6aQfXV--4mQMSKI48QbSs8HsRfaTCMJ46995f8NaG2KbTsP~dGKbAZ7~2xLI20FInodkIKVdww5u6Bv6v3Go-jPm~1vbcD4a1gFu~trOehXUHfsXTvJbppvwXBJcp7hvC~cDQyaEISNE4~TUyXDgoKuZgtt14ItuwnT4SPxnyFbx94UiC~MDwNbVcQ0xyKGWcfHwwWjoBakWsNLm-SJco9KQxd6Ahu8~YQ5IWCDDn~SO4fVdCkzE5idnkioZ0sCFGcrzgPFI~PZ5adF8yqyqUfCA__"
+
+# Castle Peak
+ne_corner = {:lat => 39.36786, :lon => -120.36380}
+sw_corner = {:lat => 39.35104, :lon => -120.31298}
+activity = "winter"
+
+@fetcher = ::GetMapTiles::Fetcher.new(template, :auth_params => auth_params, :activity => activity)
+@fetcher.download(ne_corner, sw_corner)

@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
+require "down"
+
 module GetMapTiles
   class Fetcher
     attr_accessor :url_template, :min_zoom, :max_zoom, :default_vars
 
     def initialize(url_template=nil, vars = {})
       @url_template = url_template
-      @min_zoom = 4
-      @max_zoom = 16
+      @min_zoom = 6
+      @max_zoom = 15
       @default_vars = vars
     end
 
@@ -26,20 +28,37 @@ module GetMapTiles
       
     end
 
-    def get_urls_for_region(ne_corner, sw_corner)
-      urls = []
+    def get_tiles_for_region(ne_corner, sw_corner)
+      tiles = []
       (@min_zoom .. @max_zoom).each do |zoom|
         ne_tile = get_tile_number(ne_corner[:lat], ne_corner[:lon], zoom)
         sw_tile = get_tile_number(sw_corner[:lat], sw_corner[:lon], zoom)
 
         (ne_tile[:x] .. sw_tile[:x]).each do |x|
           (ne_tile[:y] .. sw_tile[:y]).each do |y|
-            urls << format_tile_url(:x => x, :y => y, :z => zoom)
+            tiles << {
+              :url => format_tile_url(:x => x, :y => y, :z => zoom),
+              :x => x,
+              :y => y,
+              :zoom => zoom
+            }
           end
         end
       end
-      urls
+      tiles
     end
+
+    def download(ne_corner, sw_corner)
+      tiles = get_tiles_for_region(ne_corner, sw_corner)
+      tiles.each do |tile|
+        dir  = sprintf "./tiles/%{zoom}/%{x}", tile
+        FileUtils.mkdir_p dir
+        file = sprintf "#{dir}/%{y}.png", tile
+        puts "Downloading #{file}"
+        Down.download(tile[:url], destination: file, max_size: 1 * 1024 * 1024) # 1 MB
+      end
+    end
+
 
   end
 
