@@ -27,9 +27,12 @@ module GetMapTiles
     end
 
     def format_tile_url(vars)
+      render_template(@url_template, vars)
+    end
+
+    def render_template(str, vars)
       template_vars = {}.merge(@default_vars, vars)
-      sprintf(@url_template, template_vars)
-      
+      sprintf(str, template_vars)
     end
 
     def get_tiles_for_region(ne_corner, sw_corner)
@@ -52,30 +55,27 @@ module GetMapTiles
       tiles
     end
 
-    def download(ne_corner, sw_corner)
+    def download(ne_corner, sw_corner, path_template)
       tiles = get_tiles_for_region(ne_corner, sw_corner)
       tiles.each do |tile|
-        fetch_tile(tile)
+        fetch_tile(tile, path_template)
       end
     end
 
-    def fetch_tile(tile)
-      dir  = sprintf "./tiles/%{zoom}/%{x}", tile
-      FileUtils.mkdir_p dir
-      file = sprintf "#{dir}/%{y}.png", tile
-      print "#{file} downloading.. "
+    def fetch_tile(tile, path_template)
+      object_key  = render_template(path_template, tile)
+      print "#{object_key} downloading.. "
       tempfile = Down.download(tile[:url], max_size: 1 * 1024 * 1024) # 1 MB
-      # FileUtils.mv(tempfile.path, file)
       print "uploading.. "
-      upload_to_s3(tile, tempfile)
+      upload_to_s3(tile, tempfile, object_key)
       print "done.\n"
     end
 
-    def upload_to_s3(tile, tempfile)
-      object_key  = sprintf "%{zoom}/%{x}/%{y}.png", tile
+    def upload_to_s3(tile, tempfile, object_key)
       @s3_client.put_object(bucket: @s3_bucket,
         key: object_key,
-        body: File.read(tempfile.path)
+        body: File.read(tempfile.path),
+        content_type: tempfile.content_type
       )
     end
 
