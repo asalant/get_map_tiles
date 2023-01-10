@@ -69,6 +69,8 @@ module GetMapTiles
       print "uploading.. "
       upload_to_s3(tile, tempfile, object_key)
       print "done.\n"
+    rescue => err
+      print "Failed: #{err.message}\n"
     end
 
     def upload_to_s3(tile, tempfile, object_key)
