@@ -33,12 +33,15 @@ class FetcherTest < Minitest::Test
     assert_equal("http://server/14/1/2?abc", fetcher.format_tile_url(vars))
   end
 
-  def test_it_gets_urls_for_map_region
+  def test_it_gets_urls_for_region_at_14_zoom
     ne_corner = {:lat => 39.36786, :lon => -120.36380}
     sw_corner = {:lat => 39.35104, :lon => -120.31298}
     url_template = "http://server/%{z}/%{x}/%{y}?%{token}"
-    vars = {:x => 1, :y => 2, :z => 14, :token => 'abc'}
     fetcher = ::GetMapTiles::Fetcher.new(url_template, :token => 'abc')
+    fetcher.min_zoom = 14
+    fetcher.max_zoom = 15
+    urls = fetcher.get_urls_for_region(ne_corner, sw_corner)
+    assert_equal(21, urls.length)
   end
 end
 
