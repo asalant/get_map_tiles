@@ -20,7 +20,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Copy `.env.example` to `.env` in your local project. Configure with your values.
+
+`bin/fetch_heatmap` fetches heatmap tiles for a region you specify with lat,lon and copies them to S3 with file and directory names that let allow that S3 bucket to serve tiles as a TMS source.
 
 ## Development
 
