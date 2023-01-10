@@ -1,3 +1,5 @@
+![Build status](https://github.com/asalant/get_map_tiles/actions/workflows/main.yml/badge.svg)
+
 # GetMapTiles
 
 Fetch a collection of map tiles from a TMS Map Source.
