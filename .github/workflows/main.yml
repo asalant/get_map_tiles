@@ -12,6 +12,8 @@ jobs:
       with:
         ruby-version: 3.0.0
     - name: Run the default task
+      env:
+        AWS_REGION: us-west-1
       run: |
         gem install bundler -v 2.2.3
         bundle install
