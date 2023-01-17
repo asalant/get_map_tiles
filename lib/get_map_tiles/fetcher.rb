@@ -26,6 +26,20 @@ module GetMapTiles
       {:x => x, :y => y, :z => zoom}
     end
 
+    def get_northwest_corner_for_tile(zoom, x, y)
+      n = 2.0 ** zoom
+      lon_deg = x / n * 360.0 - 180.0
+      lat_rad = Math::atan(Math::sinh(Math::PI * (1 - 2 * y / n)))
+      lat_deg = 180.0 * (lat_rad / Math::PI)
+      {:lat => lat_deg, :lon => lon_deg}
+    end
+
+    def get_region_for_tile(zoom, x, y)
+      nw = get_northwest_corner_for_tile(zoom, x, y)
+      se = get_northwest_corner_for_tile(zoom, x +1 , y + 1)
+      {:n => nw[:lat], :s => se[:lat], :w => nw[:lon], :e => se[:lon]}
+    end
+
     def format_tile_url(vars)
       render_template(@url_template, vars)
     end

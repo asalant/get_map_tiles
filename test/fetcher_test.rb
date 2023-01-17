@@ -3,6 +3,7 @@
 require "test_helper"
 
 class FetcherTest < Minitest::Test
+
   def test_it_converts_lat_lon_to_x_y_for_zoom_14
     fetcher = ::GetMapTiles::Fetcher.new
     tile_num = fetcher.get_tile_number(39.36786, -120.36380, 14) # Just east of Peter Grubb Hut
@@ -17,6 +18,18 @@ class FetcherTest < Minitest::Test
     assert_equal(5428, tile_num[:x])
     assert_equal(12480, tile_num[:y])
     assert_equal(15, tile_num[:z])
+  end
+
+  def test_converts_tile_to_northwest_corner
+    fetcher = ::GetMapTiles::Fetcher.new
+    nw = fetcher.get_northwest_corner_for_tile(13, 1358, 3121) # Donner Lake Run
+    assert_equal({:lat=>39.334297429807236, :lon=>-120.322265625}, nw)
+  end
+
+  def test_converts_tile_to_lat_lon_region
+    fetcher = ::GetMapTiles::Fetcher.new
+    region = fetcher.get_region_for_tile(13, 1358, 3121) # Donner Lake Run
+    assert_equal({:n=>39.334297429807236, :s=>39.30029918615029, :w=>-120.322265625, :e=>-120.2783203125}, region)
   end
 
   def test_it_formats_tile_url
