@@ -57,5 +57,17 @@ class FetcherTest < Minitest::Test
     assert_equal(21, tiles.length)
   end
 
+  def test_it_renders_kml_for_zoom
+    ne_corner = {:lat => 39.36786, :lon => -120.36380}
+    sw_corner = {:lat => 39.35104, :lon => -120.31298}
+    zoom = 15
+    url_template = "http://server/%{z}/%{x}/%{y}?%{token}"
+    path_template = "%{activity}/%{zoom}/%{x}/%{y}.png"
+    fetcher = ::GetMapTiles::Fetcher.new(url_template, :token => 'abc', :activity => "winter")
+    fetcher.render_zoom_kml(ne_corner, sw_corner, zoom, path_template)
+    # TODO some assertion on rendered KML
+  end
+
+
 end
 
