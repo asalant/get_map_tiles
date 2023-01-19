@@ -10,7 +10,7 @@ Fetch a collection of map tiles from a TMS Map Source.
 
 Copy `.env.example` to `.env` in your local project. Configure with your values.
 
-`bin/fetch_heatmap` fetches heatmap tiles for a region you specify with lat,lon and copies them to S3 with file and directory names that let allow that S3 bucket to serve tiles as a TMS source.
+`bin/fetch_heatmap` fetches heatmap tiles for a region you specify with lat,lon and copies them to S3 with file and directory names that allow that S3 bucket to serve tiles as a TMS source.
 
 ## Development
 
