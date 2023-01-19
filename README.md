@@ -4,21 +4,7 @@
 
 Fetch a collection of map tiles from a TMS Map Source.
 
-## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'get_map_tiles'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install get_map_tiles
 
 ## Usage
 
