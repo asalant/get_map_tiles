@@ -17,15 +17,15 @@ path_template = "%{activity}/%{zoom}/%{x}/%{y}.png"
 auth_params = ENV['STRAVA_AUTH_PARAMS']
 
 # Castle Peak
-# ne_corner = {:lat => 39.36786, :lon => -120.36380}
-# sw_corner = {:lat => 39.35104, :lon => -120.31298}
+# nw_corner = {:lat => 39.36786, :lon => -120.36380}
+# se_corner = {:lat => 39.35104, :lon => -120.31298}
 
 # All Lake Tahoe
-ne_corner = {:lat => 39.40339, :lon => -120.39557}
-sw_corner = {:lat => 38.82463, :lon => -119.82157}
+nw_corner = {:lat => 39.40339, :lon => -120.39557}
+se_corner = {:lat => 38.82463, :lon => -119.82157}
 activity = "winter"
 
 @fetcher = ::GetMapTiles::Fetcher.new(url_template, :auth_params => auth_params, :activity => activity)
 # @fetcher.min_zoom = 5
 # @fetcher.max_zoom = 9
-@fetcher.download(ne_corner, sw_corner, path_template)
+@fetcher.download(nw_corner, se_corner, path_template)

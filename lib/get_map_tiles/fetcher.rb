@@ -49,18 +49,18 @@ module GetMapTiles
       sprintf(str, template_vars)
     end
 
-    def get_tiles_for_region(ne_corner, sw_corner)
+    def get_tiles_for_region(nw_corner, se_corner)
       tiles = []
       (@min_zoom .. @max_zoom).each do |zoom|
-        tiles += get_tiles_for_region_at_zoom(ne_corner, sw_corner, zoom)
+        tiles += get_tiles_for_region_at_zoom(nw_corner, se_corner, zoom)
       end
       tiles
     end
 
-    def get_tiles_for_region_at_zoom(ne_corner, sw_corner, zoom)
+    def get_tiles_for_region_at_zoom(nw_corner, se_corner, zoom)
       tiles = []
-      ne_tile = get_tile_number(ne_corner[:lat], ne_corner[:lon], zoom)
-      sw_tile = get_tile_number(sw_corner[:lat], sw_corner[:lon], zoom)
+      ne_tile = get_tile_number(nw_corner[:lat], nw_corner[:lon], zoom)
+      sw_tile = get_tile_number(se_corner[:lat], se_corner[:lon], zoom)
 
       (ne_tile[:x] .. sw_tile[:x]).each do |x|
         (ne_tile[:y] .. sw_tile[:y]).each do |y|
@@ -75,22 +75,22 @@ module GetMapTiles
       tiles
     end
 
-    def download(ne_corner, sw_corner, path_template)
-      tiles = get_tiles_for_region(ne_corner, sw_corner)
+    def download(nw_corner, se_corner, path_template)
+      tiles = get_tiles_for_region(nw_corner, se_corner)
       tiles.each do |tile|
         fetch_tile(tile, path_template)
       end
     end
 
-    def generate_kml(ne_corner, sw_corner, path_template)
+    def generate_kml(nw_corner, se_corner, path_template)
       (@min_zoom .. @max_zoom).each do |zoom|
-        zoom_kml = render_zoom_kml(ne_corner, sw_corner, zoom, path_template)
+        zoom_kml = render_zoom_kml(nw_corner, se_corner, zoom, path_template)
         # TODO write kml file to tiles folder or S3
       end
     end
     
-    def render_zoom_kml(ne_corner, sw_corner, zoom, path_template)
-      tiles = get_tiles_for_region_at_zoom(ne_corner, sw_corner, zoom)
+    def render_zoom_kml(nw_corner, se_corner, zoom, path_template)
+      tiles = get_tiles_for_region_at_zoom(nw_corner, se_corner, zoom)
       tiles_kml = ""
       tiles.each do |tile| 
         tiles_kml += render_tile_kml(tile, path_template)
