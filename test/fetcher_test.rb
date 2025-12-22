@@ -34,7 +34,7 @@ class FetcherTest < Minitest::Test
 
   def test_it_formats_tile_url
     url_template = "http://server/%{z}/%{x}/%{y}?%{token}"
-    vars = {:x => 1, :y => 2, :z => 14, :token => 'abc'}
+    vars = {:x => 1, :y => 2, :z => 14, :headers => {}, :token => 'abc'}
     fetcher = ::GetMapTiles::Fetcher.new(url_template)
     assert_equal("http://server/14/1/2?abc", fetcher.format_tile_url(vars))
   end
@@ -42,7 +42,7 @@ class FetcherTest < Minitest::Test
   def test_it_formats_tile_url_with_default_vars
     url_template = "http://server/%{z}/%{x}/%{y}?%{token}"
     vars = {:x => 1, :y => 2, :z => 14}
-    fetcher = ::GetMapTiles::Fetcher.new(url_template, :token => 'abc')
+    fetcher = ::GetMapTiles::Fetcher.new(url_template, :headers => {}, :token => 'abc')
     assert_equal("http://server/14/1/2?abc", fetcher.format_tile_url(vars))
   end
 
@@ -50,7 +50,7 @@ class FetcherTest < Minitest::Test
     nw_corner = {:lat => 39.36786, :lon => -120.36380}
     se_corner = {:lat => 39.35104, :lon => -120.31298}
     url_template = "http://server/%{z}/%{x}/%{y}?%{token}"
-    fetcher = ::GetMapTiles::Fetcher.new(url_template, :token => 'abc')
+    fetcher = ::GetMapTiles::Fetcher.new(url_template, :headers => {}, :token => 'abc')
     fetcher.min_zoom = 14
     fetcher.max_zoom = 15
     tiles = fetcher.get_tiles_for_region(nw_corner, se_corner)
@@ -63,7 +63,7 @@ class FetcherTest < Minitest::Test
     zoom = 15
     url_template = "http://server/%{z}/%{x}/%{y}?%{token}"
     path_template = "%{activity}/%{zoom}/%{x}/%{y}.png"
-    fetcher = ::GetMapTiles::Fetcher.new(url_template, :token => 'abc', :activity => "winter")
+    fetcher = ::GetMapTiles::Fetcher.new(url_template, :headers => {}, :token => 'abc', :activity => "winter")
     fetcher.render_zoom_kml(nw_corner, se_corner, zoom, path_template)
     # TODO some assertion on rendered KML
   end
