@@ -3,15 +3,17 @@
 require "fileutils"
 require "aws-sdk-s3"
 require "down"
+require "down/net_http"
 
 module GetMapTiles
   class Fetcher
-    attr_accessor :url_template, :min_zoom, :max_zoom, :default_vars
+    attr_accessor :url_template, :min_zoom, :max_zoom, :headers, :default_vars
 
     def initialize(url_template=nil, vars = {})
       @url_template = url_template
       @min_zoom = 6
       @max_zoom = 15
+      @headers = vars[:headers] || {}
       @default_vars = vars
       @s3_client = Aws::S3::Client.new # Configured from ENV
       @s3_bucket = ENV['AWS_S3_BUCKET']
@@ -130,7 +132,7 @@ module GetMapTiles
     def fetch_tile(tile, path_template)
       object_key  = render_template(path_template, tile)
       print "#{object_key} downloading.. "
-      tempfile = Down.download(tile[:url], max_size: 1 * 1024 * 1024) # 1 MB
+      tempfile = Down::NetHttp.download(tile[:url], headers: @headers, max_size: 1 * 1024 * 1024) # 1 MB
       print "uploading.. "
       upload_to_s3(tile, tempfile, object_key)
       print "done.\n"

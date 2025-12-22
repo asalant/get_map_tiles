@@ -8,10 +8,9 @@ require "get_map_tiles"
 # require "pry"
 # Pry.start
 
-url_template = "https://heatmap-external-a.strava.com/tiles-auth/%{activity}/hot/%{z}/%{x}/%{y}.png?%{auth_params}"
+url_template = "https://heatmap-external-a.strava.com/tiles-auth/%{activity}/hot/%{z}/%{x}/%{y}.png?"
 path_template = "%{activity}/%{zoom}/%{x}/%{y}.png"
 
-auth_params = ENV['STRAVA_AUTH_PARAMS']
 
 # NW  Tahoe
 # View in Google Earth on 8/29/2011 to see some snowcover
@@ -19,7 +18,7 @@ nw_corner = {:lat => 39.38144, :lon => -120.37551}
 se_corner = {:lat => 39.20263, :lon => -120.19526}
 activity = "winter"
 
-@fetcher = ::GetMapTiles::Fetcher.new(url_template, :auth_params => auth_params, :activity => activity)
+@fetcher = ::GetMapTiles::Fetcher.new(url_template, :activity => activity)
 zoom = 15
 kml = @fetcher.render_zoom_kml(nw_corner, se_corner, zoom, path_template)
 puts kml

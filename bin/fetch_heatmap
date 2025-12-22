@@ -11,21 +11,39 @@ require "get_map_tiles"
 # require "pry"
 # Pry.start
 
-url_template = "https://heatmap-external-a.strava.com/tiles-auth/%{activity}/hot/%{z}/%{x}/%{y}.png?%{auth_params}"
+url_template = "https://content-a.strava.com/identified/globalheat/%{activity}/hot/%{z}/%{x}/%{y}.png"
 path_template = "%{activity}/%{zoom}/%{x}/%{y}.png"
 
 auth_params = ENV['STRAVA_AUTH_PARAMS']
+headers = { "Cookie" => ENV['STRAVA_COOKIE'] }
+
+activity = "winter"
+
+# All Lake Tahoe
+# nw_corner = {:lat => 39.40339, :lon => -120.39557}
+# se_corner = {:lat => 38.82463, :lon => -119.82157}
 
 # Castle Peak
 # nw_corner = {:lat => 39.36786, :lon => -120.36380}
 # se_corner = {:lat => 39.35104, :lon => -120.31298}
 
-# All Lake Tahoe
-nw_corner = {:lat => 39.40339, :lon => -120.39557}
-se_corner = {:lat => 38.82463, :lon => -119.82157}
-activity = "winter"
+# Bridgeport to Lee Vining
+# nw_corner = {:lat => 38.25337, :lon => -119.50684}
+# se_corner = {:lat => 37.90502, :lon => -119.08732}
 
-@fetcher = ::GetMapTiles::Fetcher.new(url_template, :auth_params => auth_params, :activity => activity)
+# Lassen
+# nw_corner = {:lat => 40.57950, :lon => -121.58681}
+# se_corner = {:lat => 40.40730, :lon => -121.14708}
+
+# Shasta
+# nw_corner = {:lat => 41.44691, :lon => -122.26443}
+# se_corner = {:lat => 41.36335, :lon => -122.11725}
+
+# Snowfall Lodge BC
+nw_corner = {:lat => 51.00107, :lon => -117.59589}
+se_corner = {:lat => 50.93186, :lon => -117.47993}
+
+@fetcher = ::GetMapTiles::Fetcher.new(url_template, :auth_params => auth_params, :headers => headers, :activity => activity)
 # @fetcher.min_zoom = 5
 # @fetcher.max_zoom = 9
 @fetcher.download(nw_corner, se_corner, path_template)
